@@ -4,6 +4,8 @@ This code is delivered "As-Is". Notwithstanding anything to the contrary, DNAnex
 
 [MIT License](https://github.com/dnanexus/UKB_RAP/blob/main/LICENSE) applies to this code.
 
+This work was done mainly by Yih-Chii Hwang, PhD as a part of her work on [AD-by-proxy GWAS Guide](https://dnanexus.gitbook.io/uk-biobank-rap/science-corner/gwas-ex).
+
 ## Files needed for LiftOver to convert b37 to hg38
 ### UCSC chain file
 
