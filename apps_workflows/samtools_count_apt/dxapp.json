@@ -1,0 +1,58 @@
+{
+  "name": "samtools_count_name",
+  "title": "Samtools count alignments",
+  "summary": "Use samtools to count alignments from CRAM file and print them into a separate TXT file.",
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "name": "mappings_cram",
+      "label": "CRAM file",
+      "help": "",
+      "class": "file",
+      "patterns": ["*.cram"],
+      "optional": false
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "counts_txt",
+      "label": "Alignment count file",
+      "help": "",
+      "class": "file",
+      "patterns": ["*.txt"]
+    }
+  ],
+  "runSpec": {
+    "interpreter": "bash",
+    "timeoutPolicy": {
+      "*": {
+        "hours": 3
+      }
+    },
+    "execDepends": [
+      {
+        "name": "samtools",
+        "package_manager": "apt"
+      }
+    ],
+    "distribution": "Ubuntu",
+    "release": "20.04",
+    "version": "0",
+    "file": "src/code.sh"
+  },
+  "access": {
+    "network": [
+      "*"
+    ]
+  },
+  "ignoreReuse": false,
+  "regionalOptions": {
+    "aws:eu-west-2": {
+      "systemRequirements": {
+        "*": {
+          "instanceType": "mem1_ssd1_v2_x4"
+        }
+      }
+    }
+  }
+}
