@@ -1,0 +1,74 @@
+{
+  "name": "view_and_count",
+  "title": "view_and_count",
+  "stages": [
+    {
+      "id": "stage-common",
+      "name": "common",
+      "executable": "applet-G7Z3QyQJPXf1881xJ6xXBzXV"
+    },
+    {
+      "id": "stage-0",
+      "name": "slice_cram",
+      "executable": "applet-G7Z1108JPXfFPGZF4V983K8X",
+      "input": {
+        "cram": {
+          "$dnanexus_link": {
+            "outputField": "cram",
+            "stage": "stage-common"
+          }
+        },
+        "cram_index": {
+          "$dnanexus_link": {
+            "outputField": "cram_index",
+            "stage": "stage-common"
+          }
+        },
+        "ref_fasta": {
+          "$dnanexus_link": {
+            "outputField": "ref_fasta",
+            "stage": "stage-common"
+          }
+        },
+        "ref_fasta_index": {
+          "$dnanexus_link": {
+            "outputField": "ref_fasta_index",
+            "stage": "stage-common"
+          }
+        },
+        "num_chrom": {
+          "$dnanexus_link": {
+            "outputField": "num_chrom",
+            "stage": "stage-common"
+          }
+        }
+      }
+    },
+    {
+      "id": "stage-2",
+      "name": "scatter (slice in slice_cram.slices)",
+      "executable": "applet-G7Z3V08JPXf9KKzf4Pk1QVBV",
+      "input": {
+        "slice_cram___slices": {
+          "$dnanexus_link": {
+            "outputField": "slices",
+            "stage": "stage-0"
+          }
+        }
+      }
+    },
+    {
+      "id": "stage-outputs",
+      "name": "outputs",
+      "executable": "applet-G7Z3V20JPXf0pby84QJPf5j5",
+      "input": {
+        "count_bam___count": {
+          "$dnanexus_link": {
+            "outputField": "count_bam___count",
+            "stage": "stage-2"
+          }
+        }
+      }
+    }
+  ]
+}

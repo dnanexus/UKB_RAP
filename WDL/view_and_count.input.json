@@ -1,0 +1,7 @@
+{
+  "view_and_count.num_chrom": 22,
+  "view_and_count.cram_index": "File",
+  "view_and_count.cram": "File",
+  "view_and_count.ref_fasta": "File",
+  "view_and_count.ref_fasta_index": "File"
+}
