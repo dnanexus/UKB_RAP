@@ -1,0 +1,7 @@
+{
+  "stage-common.ref_fasta_index": "File",
+  "stage-common.num_chrom": 22,
+  "stage-common.ref_fasta": "File",
+  "stage-common.cram": "File",
+  "stage-common.cram_index": "File"
+}
