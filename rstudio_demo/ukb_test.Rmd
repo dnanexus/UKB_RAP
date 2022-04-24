@@ -1,0 +1,70 @@
+---
+title: "Rmarkdown On UKB RAP"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document will show you how to access files from RAP 
+
+## List files in current project
+
+We'll need to figure out where our files are in the RAP project storage.
+
+```{r}
+system("dx ls 'Showcase metadata'")
+```
+## Load the file using dxFUSE
+
+The first way we can access a file in a project is by prepending a `/mnt/project/` to our file path. This lets us access files in our project. 
+
+```{r}
+field_data2 <- read.delim("/mnt/project/Showcase metadata/field.tsv")
+```
+
+```{r}
+head(field_data2)
+```
+
+## Alternative: download file into Workspace Storage
+
+If we want to be explicit in downloading files, we can utilize `dx download` within `system()` to download our files from the DX Toolkit.
+
+Note that we 
+
+```{r}
+system("dx download '/Showcase metadata/field.tsv'")
+list.files()
+```
+
+## Load the file into R
+
+```{r}
+field_data <- read.delim("field.tsv")
+```
+
+```{r}
+head(field_data)
+```
+
+
+## Writing our file to the RStudio Workspace
+
+```{r}
+write.csv(field_data2, file="updated_field_data.csv")
+list.files()
+```
+
+## Saving Our file back into Project Storage
+
+```{r}
+system("dx upload updated_field_data.csv")
+```
+
+## Save our notebook into Project storage as well
+
+```{r}
+system("dx upload ukb_test.Rmd")
+```
