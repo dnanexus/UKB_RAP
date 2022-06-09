@@ -1,0 +1,95 @@
+---
+title: "Installing R and Bioconductor Packages using `renv`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+This notebook is delivered "As-Is". Notwithstanding anything to the contrary, DNAnexus will have no warranty, support, liability or other obligations with respect to Materials provided hereunder.
+
+[MIT License](https://github.com/dnanexus/UKB_RAP/blob/main/LICENSE) applies to this notebook.
+
+# Using `renv`
+
+In this markdown project, we'll install some packages reproducibly with `renv`, which will save us the headache of reinstalling packages from scratch everytime.
+
+There are the following steps for using `renv` on UKB RAP:
+
+1) Create our project
+2) Install `renv`, use `renv::init()`
+3) Install our packages of interest, then call `renv::snapshot()`
+4) Zip our project up, and upload the zip file to our UKB RAP project using `dx upload`
+
+To restore our project, we need to do the following:
+
+a) upload our project zip file from project storage using `dx download`
+b) unzip our project
+c) open the project by clicking on the `my_project.rproj` file.
+
+## 1. Create Our Project
+
+Open this RMarkdown file outside of a project (If you're in one, click "Files >> Close Project").
+
+The first thing we'll do is create a project called `my_project`. We'll do this with `usethis::create_project()` (after installing it, of course).
+
+```{r}
+install.packages("usethis")
+usethis::create_project("my_project")
+```
+
+## 2. Install `renv`
+
+`renv` will allow us to make our project reproducible by creating a private project library.
+
+We start up our project environment by using `renv::init()`. This will set up the file structure for the private library.
+Uncomment the install commands if you are comfortable with the library license and want to install and run the parts notebook that depend on the library.
+
+```{r}
+#install.packages("renv")
+renv::init()
+```
+
+# 3. Install our packages
+
+Now we can install our packages into our project, including Bioconductor packages.
+
+When we're done, we call `renv::snapshot()`, which scans the libraries we've installed and updates the `renv.lock` file.
+
+```{r}
+#install.packages("skimr")
+#BiocManager::install(c("GenomicFeatures", "AnnotationDbi"))
+renv::snapshot()
+```
+
+## Do some work
+
+
+
+```{r}
+
+```
+
+## 4. Zipping our project
+
+When we're done, we can run the following in our project to zip up our project and use `dx upload` to upload the RStudio Project to our UKB RAP Project:
+
+```{r}
+system("dx-backup-folder -d /.Backups/my_project.tar.gz")
+```
+
+# Restore Project and Dependencies
+
+## A. Download and Unzip
+
+Now you can download your RStudio project from project storage, unzip it, and open the project up again by clicking on the `my_project.rproj` file in the project.
+
+We do this using `dx-restore-folder`, which will let us restore the folder we've stored in `/.Backups/my_project.tar.gz`).
+
+```{r}
+system("dx-restore-folder /.Backups/my_project.tar.gz")
+```
+
+## B. Open our project up
+
+In the RStudio Files pane, you can then open the project by opening the `.Rproj` file and have access to all of your libraries.
