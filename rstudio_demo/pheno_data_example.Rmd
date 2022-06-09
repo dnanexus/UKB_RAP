@@ -1,0 +1,98 @@
+---
+title: "Working with phenotypic data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This notebook is delivered "As-Is". Notwithstanding anything to the contrary, DNAnexus will have no warranty, support, liability or other obligations with respect to Materials provided hereunder.
+
+[MIT License](https://github.com/dnanexus/UKB_RAP/blob/main/LICENSE) applies to this notebook.
+
+# Initializing `renv`
+
+Start by installing `renv` library and initializing `renv` project. The `renv` initialization creates a new `renv.lock` file where the R version and the list of used packages with their version are tracked and also a new `renv` folder containing settings file and script to activate virtual environment.
+
+```{r}
+install.packages('renv')
+#renv::init()
+```
+
+## Installing libraries
+
+Uncomment the install commands if you are comfortable with the library license and want to install and run the parts notebook that depend on the library.
+
+```{r}
+#renv::install('tidyverse')
+#renv::install('Hmisc')
+```
+
+# Transfer files from UKB RAP Project
+
+Following code assumes that you have `age_month_birth.csv` file in the root directory of your current UKB RAP project. You can create this file by using Table exporter.
+
+```{r}
+system('dx download age_month_birth.csv')
+```
+
+# Make analysis
+
+```{r}
+library('tidyverse')
+library('Hmisc')
+```
+
+Load phenotypic data.
+
+```{r}
+data <- read.csv('age_month_birth.csv')
+head(data)
+```
+
+Plot histogram for each column.
+
+```{r}
+ggplot(gather(data), aes(value)) +
+  geom_bar(stat = 'count', binwidth = 0.5) +
+  facet_wrap(~key, scales = 'free_x') + theme(axis.text.x=element_text(angle = 45, vjust = 0.5))
+```
+
+Print descriptive statistics.
+
+```{r}
+describe(data)
+```
+
+Extract rows that have `Age at the recruitment` age less than 5th percentile.
+
+```{r}
+data_young <- data %>% filter(p21022 < quantile(p21022, 0.05, na.rm = TRUE))
+```
+
+Look descriptive statistics of subset data.
+
+```{r}
+describe(data_young)
+```
+
+Write subset data frame as CSV file.
+
+```{r}
+write_csv(data_young, 'age_month_birth_young.csv')
+```
+
+# Snapshot installed libraries
+
+Save the state of the project library to the lockfile (called `renv.lock`).
+
+```{r}
+renv::snapshot()
+```
+
+# Upload RStudio project into UKB RAP Project storge
+
+```{r}
+system('dx-backup-folder -d /.Backups/rstudio_webinar.tar.gz')
+```
