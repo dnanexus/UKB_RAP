@@ -16,8 +16,8 @@ This notebook is delivered "As-Is". Notwithstanding anything to the contrary, DN
 Start by installing `renv` library and initializing `renv` project. The `renv` initialization creates a new `renv.lock` file where the R version and the list of used packages with their version are tracked and also a new `renv` folder containing settings file and script to activate virtual environment.
 
 ```{r}
-install.packages('renv')
-#renv::init()
+#install.packages('renv')
+renv::init()
 ```
 
 ## Installing libraries
@@ -27,14 +27,15 @@ Uncomment the install commands if you are comfortable with the library license a
 ```{r}
 #renv::install('tidyverse')
 #renv::install('Hmisc')
+#renv::install('rlang')
 ```
 
 # Transfer files from UKB RAP Project
 
-Following code assumes that you have `age_month_birth.csv` file in the root directory of your current UKB RAP project. You can create this file by using Table exporter.
+Following code assumes that you have `data.csv` file in the root directory of your current UKB RAP project. You can create this file by using Table exporter.
 
 ```{r}
-system('dx download age_month_birth.csv')
+system('dx download data.csv')
 ```
 
 # Make analysis
@@ -47,7 +48,7 @@ library('Hmisc')
 Load phenotypic data.
 
 ```{r}
-data <- read.csv('age_month_birth.csv')
+data <- read.csv('data.csv')
 head(data)
 ```
 

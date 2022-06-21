@@ -8,16 +8,16 @@ debug <- FALSE
 
 # Rscript --default-packages=optparse,readr --vanilla export_phenotypes.R
 # Rscript --default-packages=optparse,readr --vanilla export_phenotypes.R -h
-# Rscript --default-packages=optparse,readr --vanilla export_phenotypes.R -d record-XXX -i fields_to_export.csv
+# Rscript --default-packages=optparse,readr --vanilla export_phenotypes.R -d record-XXX -i datalist.csv
 
 ### HARDCODED VALUES FOR INPUT PARAMETERS ###
 
-dataset <- "record-GB70VV8J7ZfX1YJKF537gXPF"
+dataset <- "record-GB70X38Jq0pXZYjZPP6vB7G5"
 input_csv <- "datalist.csv" # first row (header) should contain "field_title", then followed by individual field titles on the next rows
 
 ### INSTALL (IF NEEDED) AND LOAD REQUIRED R PACKAGES ###
 
-Uncomment the install commands if you are comfortable with the library license and want to install and run the code that depend on the library.
+# Uncomment the install commands if you are comfortable with the library license and want to install and run the code that depend on the library.
 
 #install.packages("optparse", repos = "http://cran.us.r-project.org")
 #install.packages("readr", repos = "http://cran.us.r-project.org")
