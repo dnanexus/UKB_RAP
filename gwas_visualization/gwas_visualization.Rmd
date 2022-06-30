@@ -1,0 +1,124 @@
+---
+title: "Visualize GWAS results"
+output: html_document
+---
+
+# Explore and annotate GWAS results
+
+This notebook is delivered "As-Is". Notwithstanding anything to the contrary, DNAnexus will have no warranty, support, liability or other obligations with respect to Materials provided hereunder.
+
+[MIT License](https://github.com/dnanexus/UKB_RAP/blob/main/LICENSE) applies to this notebook.
+
+
+## Working with flat files on DNAnexus in R
+
+Let's process and concatenate regenie output files before loading it into R.
+
+```{r}
+# Concatenate files, assuming all regenie output files are in one directory
+system("zcat /mnt/project/regenie_output/assoc.0*.regenie.gz | awk '(NR<=1)' > all_chr.regenie")
+system('find /mnt/project/regenie_output/*.regenie.gz  -exec sh -c "zcat {} | tail -n +2" \\; >> all_chr.regenie')
+```
+
+## Activate `renv`
+
+```{r}
+renv::activate()
+```
+
+## Install Needed Packages
+
+Uncomment the install commands if you are comfortable with the library license and want to install and run the parts notebook that depend on the library.
+
+```{r, quetly=TRUE}
+# install.packages("rlang", version = '1.0.2')
+# install.packages("cli")
+# install.packages("tidyverse")
+# install.packages("devtools")
+# install.packages("qqman")
+# devtools::install_github("IRkernel/repr")
+```
+
+## Loading the Required Packages
+
+We'll do a little bit of data wrangling using `{tidyverse}`. Make sure that you've loaded the correct snapshot for this.
+
+
+```{r}
+# load packages 
+library(qqman, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+```
+
+## Reading and pre-processing in REGENIE output GWAS file
+
+We'll take our GWAS result file that we created and read it using the `read.table()` function. We then need to split `Info` column into multiple columns.
+
+```{r}
+#gwas <- read.table("~/Downloads/multiple_assoc_edit_tab.all.regenie", header = T, as.is = T, sep = '\t')
+gwas <- read.table("all_chr.regenie", header = T, as.is = T, sep = "")
+
+# Rename and subset columns
+gwas <- gwas %>% 
+  mutate(Info = str_replace(Info, "REGENIE_BETA=", "")) %>%
+  mutate(Info = str_replace(Info, 'REGENIE_SE=', "")) %>%
+  mutate(Info = str_replace(Info, 'INFO=', '')) %>%
+  mutate(Info = str_replace(Info, 'MAC=', '')) %>%
+  tidyr::separate(col = Info, into = c("BETA", "SE", "INFO", "MAC")) %>%
+  select(Name, Chr, Pos, Effect, Pval, BETA, SE)
+
+# Look at the head of the gwas dataframe
+head(gwas)
+```
+
+## Plotting a Manhattan Plot
+
+We can use the `manhattan()` function from the `{qqman}` package to generate a manhattan plot.
+
+Let's first define a couple of color palettes for distinguishing the different chromosomes in our Manhattan plot.
+
+```{r}
+# Adjust plot size
+options(repr.plot.width=12, repr.plot.height=8)
+
+# Select Manhattan plot color palette 
+# w = warmer tones
+# n = neutral
+# c = cooler tones
+
+# Reds
+reds.w <- c("#FFAD7E", "#E9874F", "#D96726", "#AE4A12", "#873100") 
+reds.n <- c("#FF817E", "#E9534F", "#D92B26", "#AE1612", "#870300") 
+reds.c <- c("#E2709A", "#CB4577", "#BD215B", "#970F42", "#75002B") 
+```
+
+```{r}
+# Make the Manhattan plot on the gwas results dataframe
+# Use reds.c as our color palette
+manhattan(
+  gwas, chr = "Chr", bp = "Pos", p = "Pval", snp = "Name", ylim=c(0,10),  suggestiveline=FALSE,
+  col = reds.w,main = "Manhattan Plot for case control GWAS"
+)
+```
+
+## Generating a Q-Q plot
+
+We can generate a Q/Q plot to check our p-value distribution.
+
+```{r}
+qq(gwas$Pval, main = "Q-Q plot of case-control GWAS p-values")
+```
+
+## Saving and storing your work
+
+Create a lockfile capturing the state of a project's R package dependencies.
+
+```{r}
+renv::snapshot()
+```
+
+Upload RStudio project onto RAP storage.
+
+```{r}
+system("dx-backup-folder -d /.Backups/rstudio_webinar.tar.gz")
+```
