@@ -64,7 +64,7 @@ gwas <- gwas %>%
   mutate(Info = str_replace(Info, 'REGENIE_SE=', "")) %>%
   mutate(Info = str_replace(Info, 'INFO=', '')) %>%
   mutate(Info = str_replace(Info, 'MAC=', '')) %>%
-  tidyr::separate(col = Info, into = c("BETA", "SE", "INFO", "MAC")) %>%
+  tidyr::separate(col = Info, into = c("BETA", "SE", "INFO", "MAC"), sep = ";") %>%
   select(Name, Chr, Pos, Effect, Pval, BETA, SE)
 
 # Look at the head of the gwas dataframe
