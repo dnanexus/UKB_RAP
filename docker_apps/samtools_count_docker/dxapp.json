@@ -1,0 +1,60 @@
+{
+  "name": "samtools_count_docker",
+  "title": "Samtools count alignments - dockerized version",
+  "summary": "Counts alignments from a BAM file and prints them into a separate TXT file.",
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "name": "mappings_bam",
+      "label": "BAM file",
+      "help": "Input BAM file",
+      "class": "file",
+      "patterns": ["*.bam"],
+      "optional": false
+    },
+    {
+      "name": "docker_file",
+      "label": "Docker snapshot file",
+      "help": "Docker snapshot file",
+      "class": "file",
+      "patterns": ["*tar.gz"],
+      "optional": false
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "counts_txt",
+      "label": "Alignment count file",
+      "help": "TXT file with the number of alignments",
+      "class": "file",
+      "patterns": ["*.txt"]
+    }
+  ],
+  "runSpec": {
+    "interpreter": "bash",
+    "timeoutPolicy": {
+      "*": {
+        "hours": 12
+      }
+    },
+    "distribution": "Ubuntu",
+    "release": "20.04",
+    "version": "0",
+    "file": "src/code.sh"
+  },
+  "access": {
+    "network": [
+      "*"
+    ]
+  },
+  "ignoreReuse": false,
+  "regionalOptions": {
+    "aws:eu-west-2": {
+      "systemRequirements": {
+        "*": {
+          "instanceType": "mem1_ssd1_v2_x4"
+        }
+      }
+    }
+  }
+}
