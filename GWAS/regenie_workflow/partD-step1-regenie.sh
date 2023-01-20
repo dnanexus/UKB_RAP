@@ -33,11 +33,11 @@ run_regenie_step1="regenie --step 1\
  --phenoFile diabetes_wes_200k.phe --covarFile diabetes_wes_200k.phe\
  --extract 200K_WES_array_snps_qc_pass.snplist --phenoCol diabetes_cc\
  --covarCol age --covarCol sex --covarCol ethnic_group --covarCol ever_smoked\
- --bsize 1000 --bt --loocv --gz --threads 16";
+ --bsize 1000 --bt --loocv --gz --threads 16"
 
 dx run swiss-army-knife -iin="${data_file_dir}/ukb22418_c1_22_v1_merged.bed" \
    -iin="${data_file_dir}/ukb22418_c1_22_v1_merged.bim" \
    -iin="${data_file_dir}/ukb22418_c1_22_v1_merged.fam"\
    -iin="${data_file_dir}/diabetes_wes_200k.phe" \
-   -icmd=${run_plink_wes} --tag="Step1" --instance-type "mem1_ssd1_v2_x16"\
-   --destination="${project}:/Data/" --brief --yes;
+   -icmd="${run_regenie_step1}" --tag="Step1" --instance-type "mem1_ssd1_v2_x16"\
+   --destination="${project}:/Data/" --brief --yes
