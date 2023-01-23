@@ -54,6 +54,6 @@ for chr in {1..2}; do
    -iin="${data_file_dir}/diabetes_wes_200k.phe" \  #phenotype results
    -iin="${data_file_dir}/diabetes_results_pred.list" \ #Merged results produced from 03-step1-regenie.sh
    -iin="${data_file_dir}/diabetes_results_1.loco.gz" \ #Merged results produced from 03-step1-regenie.sh
-   -icmd=${run_regenie_cmd} --tag="Step2" --instance-type "mem1_ssd1_v2_x16"\
+   -icmd="${run_regenie_cmd}" --tag="Step2" --instance-type "mem1_ssd1_v2_x16"\
    --destination="${project}:/Data/" --brief --yes
 done
