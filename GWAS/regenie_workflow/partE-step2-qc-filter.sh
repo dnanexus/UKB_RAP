@@ -46,6 +46,6 @@ for i in {1..22}; do
      -iin="${exome_file_dir}/${data_field}_c${i}_b0_v1.bim" \
      -iin="${exome_file_dir}/${data_field}_c${i}_b0_v1.fam"\
      -iin="${data_file_dir}/diabetes_wes_200k.phe" \
-     -icmd=${run_plink_wes} --tag="Step2" --instance-type "mem1_ssd1_v2_x16"\
+     -icmd="${run_plink_wes}" --tag="Step2" --instance-type "mem1_ssd1_v2_x16"\
      --destination="${project}:/Data/" --brief --yes
 done
