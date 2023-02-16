@@ -1,4 +1,4 @@
-# Running Nextflow on cloud_workstation
+# Running Nextflow on Cloud Workstation
 
 You can set up Nextflow on a job running cloud_workstation. Below are the instructions on how to install `nextflow` and perfroom `nextflow run` on a cloud_workstation job. 
 
@@ -8,7 +8,7 @@ You can set up Nextflow on a job running cloud_workstation. Below are the instru
 ```
 $ dx login
 ```
-3. Start a job running the cloud_workstation app on your local machine with SSH access. You may want to select an instance type with sufficient compute resources (number of CPUs, disk and memory capacity) for the Nextflow pipeline analysis.  For guidance on cloud computing and how to select instance types see [here](https://laderast.github.io/bash_for_bioinformatics/03-cloud-computing-basics.html#sec-instance). Available instance types can be found [here](https://documentation.dnanexus.com/developer/api/running-analyses/instance-types).
+3. Start a job running the [cloud_workstation app](https://documentation.dnanexus.com/developer/cloud-workstation) on your local machine with SSH access. You may want to select an instance type with sufficient compute resources (number of CPUs, disk and memory capacity) for the Nextflow pipeline analysis.  For guidance on cloud computing and how to select instance types see [here](https://laderast.github.io/bash_for_bioinformatics/03-cloud-computing-basics.html#sec-instance). Available instance types can be found [here](https://documentation.dnanexus.com/developer/api/running-analyses/instance-types).
 
 ```
 $ dx run cloud_workstation \
@@ -51,11 +51,11 @@ dnanexus@job-cccc:~$
 dnanexus@job-cccc:~$ sudo apt install openjdk-17-jre-headless -y
 ```
 
-6. Download Nextflow installation scripts onto the cloud_workstation job:
+6. Download Nextflow installation scripts onto the cloud_workstation job
 ```
 dnanexus@job-cccc:~$ curl -fL https://get.nextflow.io > nextflow_install.sh
 ```
-7. Specify the version of nextflow to use. After you open the file using nano, edit the file to change NXF_VER=22.10.6 to NXF_VER=22.04.5 (text highlighted in red below). You can then save and exit using the following [key commands](https://www.freecodecamp.org/news/how-to-save-and-exit-nano-in-terminal-nano-quit-command/)
+7. Specify the version of nextflow to use. After you open the file using nano, edit the file to change `NXF_VER=22.10.6` to `NXF_VER=22.04.5` (last line in the text below). You can then save and exit using the following [key commands](https://www.freecodecamp.org/news/how-to-save-and-exit-nano-in-terminal-nano-quit-command/)
 
 ```
 dnanexus@job-cccc:~$ nano nextflow_install.sh
@@ -81,7 +81,7 @@ dnanexus@job-cccc:~$ nano nextflow_install.sh
 NXF_VER=${NXF_VER:-'22.10.6'}
 ```
 
-8. Install Nextflow environment on the cloud_workstation job: 
+8. Install Nextflow environment on the cloud_workstation job
 ```
 dnanexus@job-cccc:~$ cat nextflow_install.sh | bash
 ```
