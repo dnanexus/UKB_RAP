@@ -1,0 +1,300 @@
+---
+title: dx extract_dataset for R
+---
+
+# “dx extract_dataset” in R
+<hr/>
+***As-Is Software Disclaimer***
+
+This content in this repository is delivered “As-Is”. Notwithstanding anything to the contrary, DNAnexus will have no warranty, support, liability or other obligations with respect to Materials provided hereunder.
+
+<hr/>
+
+This notebook demonstrates usage of the dx command `extract_dataset` for:
+* Retrieval of Apollo-stored data, as referenced within entities and fields of a Dataset or Cohort object on the platform
+* Retrieval of the underlying data dictionary files used to generate a Dataset object on the platform
+
+<a href="https://github.com/dnanexus/OpenBio/blob/master/LICENSE.md">MIT License</a> applies to this notebook.
+
+## Preparing your environment
+### Launch spec:
+
+* App name: JupyterLab with Python, R, Stata, ML ()
+* Kernel: R
+* Instance type: Spark Cluster - mem1_ssd1_v2_x2, 3 nodes 
+* Snapshot: `/.Notebook_snapshots/jupyter_snapshot.gz`
+* Cost: < $0.2
+* Runtime: =~ 10 min
+* Data description: Input for this notebook is a v3.0 Dataset or Cohort object ID
+
+### Install dxpy
+extract_dataset requires dxpy version >= 0.329.0. If running the command from your local environment (i.e. off of the DNAnexus platform), it may be required to also install pandas. For example, pip3 install -U dxpy[pandas]
+
+```{r}
+#| trusted: true
+system("pip3 show dxpy", intern = TRUE)
+```
+
+### Install tidyverse for data processing
+
+Quick note - you will need to read the licenses for the tidyverse in order to make sure whether you and your group are comfortable with the licensing terms.
+
+```{r}
+#| trusted: true
+#| eval: false
+install.packages(c("readr", "stringr", "dplyr", "glue", "reactable", "janitor", "remotes"))
+remotes::install_github("laderast/xvhelper")
+```
+
+### Import packages
+
+```{r}
+#| trusted: true
+library(dplyr)
+library(readr)
+library(stringr)
+library(glue)
+library(reactable)
+library(xvhelper)
+```
+
+### 1. Assign environment variables
+
+```{r}
+#| trusted: true
+# The referenced Dataset is private and provided only to demonstrate an example input. The user will need to supply a permissible and valid record-id
+
+# Assign project-id of dataset
+# In general, you should use the project id of your UKB project
+
+# Assign dataset record-id
+# record id can be either from a dataset or from a cohort
+projectid <- "project-XXXXXX"
+rid <- "record-G406j8j0x8kzxv3G08k64gVV"
+# Assign joint dataset project-id:record-id
+dataset <- glue::glue("{projectid}:{rid}")
+```
+
+### 2. Call “dx extract_dataset” using a supplied dataset
+
+We'll use the `{glue}` package to put our bash commands together for `dx extract_dataset`, and use `system()` to execute our bash code.
+
+`glue::glue()` has the advantage of not needing to `paste()` together strings. The string substitution is cleaner.
+
+```{r}
+#| trusted: true
+cmd <- glue::glue("dx extract_dataset {dataset} -ddd")
+
+cmd
+```
+
+Let's execute our command using `system()` and then we will list the files that result using `list.files()`. We generate three files in the directory in JupyterLab storage:
+
+- *dataset_name*`.codings.csv`
+- *dataset_name*`.data_dictionary.csv`
+- *dataset_name*`.entity_dictionary.csv`
+
+```{r}
+#| trusted: true
+system(cmd)
+list.files()
+```
+
+#### Preview data in the three dictionary (*.csv) files
+
+```{r}
+#| trusted: true
+#codings_file <- system("ls *.codings.csv", intern = TRUE)
+codings_file <- list.files(pattern="*.codings.csv")
+codings_df <- read_csv(codings_file, show_col_types = FALSE)
+head(codings_df)
+```
+
+```{r}
+#| trusted: true
+entity_dict_file <- system("ls *.entity_dictionary.csv", intern=TRUE)
+entity_dict_df <- read_csv(entity_dict_file, show_col_types = FALSE)
+head(entity_dict_df)
+```
+
+### Understanding the Data Dictionary File
+
+The data dictionary is the glue for the entire dataset. It maps:
+
+- Entity to Fields
+- Fields to Codings
+- Entity to Entity
+
+We'll use the data dictionary to understand how to building our list of fields, and later, we'll join it to the codings file to build a list of fields and their coded values.
+
+There are more columns to the data dictionary, but let's first see the `entity`, `name`, `title`, and `type` columns:
+
+```{r}
+#| trusted: true
+#data_dict_file <- system("ls *.data_dictionary.csv", intern=TRUE)
+data_dict_file <- list.files(pattern="*.data_dictionary.csv")
+data_dict_df <- read_csv(data_dict_file, show_col_types = FALSE)
+data_dict_df <- data_dict_df 
+
+data_dict_df %>%
+        select(entity, name, title, type) %>%
+        head()
+```
+
+### 3. Parse returned metadata and extract entity/field names
+
+Let's search for some fields. We want the following fields:
+
+- `Coffee intake | instance 0`
+- `Sex` (Gender)
+- `Smoked cigarette or pipe within last hour | Instance 0`
+
+We can use the `{reactable}` package to make a searchable table of the data dictionary. This will help in finding fields.
+
+Note the search box in the top right of the table - when we have many fields, we can use the search box to find fields of interest. Try searching for `Coffee intake` and see what fields pop up.
+
+```{r}
+#| trusted: true
+data_dict_df <- data_dict_df %>%
+    relocate(name, title) %>%
+    mutate(ent_field = glue::glue("{entity}.{name}"))
+
+basic_data_dict <- data_dict_df |>
+                    select(title, name, entity, ent_field, coding_name, is_multi_select, is_sparse_coding)
+
+reactable::reactable(basic_data_dict, searchable = TRUE)
+```
+
+Another strategy for searching fields: we can use `grepl` within `dplyr::filter()` to search for fields that match our criteria.
+
+Note we're chaining the `grepl` statements with an OR `|`.
+
+We're also concatenating `entity` and `name` to a new variable, `ent_field`, which we'll use when we specify our list of fields.
+
+```{r}
+#| trusted: true
+filtered_dict <- data_dict_df %>%
+    filter(grepl("Coffee type", title) | 
+           grepl("Sex", title) | 
+           grepl("Smoked", title) | 
+           grepl("Age at recruitment", title) |
+           grepl("main ICD10", title) |
+           grepl("Types of transport", title)
+          ) %>%
+    arrange(title) 
+
+filtered_dict %>%
+    select(name, title, ent_field)
+```
+
+Let's use this subset of fields - we'll pull the `ent_field` column, and paste it together into a single comma delimited string using `paste`:
+
+```{r}
+#| trusted: true
+field_list <- filtered_dict %>%
+    pull(ent_field)
+
+#field_list <- field_list[200:210]
+field_list <- paste(field_list, collapse = ",")
+field_list <- paste0("participant.eid,", field_list)
+field_list
+```
+
+### 4. Use extracted entity and field names as input to the called function, “dx extract_dataset” and extract data
+
+Again, we'll use `glue()` here for cleaner string substitution.
+
+We'll extract the cohort information to a file called `cohort_data.csv` and work with this file for the rest of the notebook.
+
+```{r}
+#| trusted: true
+cohort_template <- "dx extract_dataset {dataset} --fields {field_list} -o cohort_data.csv"
+cmd <- glue::glue(cohort_template)
+
+cmd
+
+system(cmd)
+```
+
+#### Preview data in the retrieved data file
+
+We'll see that the retrieved data contains the integer and character codes. These must be decoded (see below):
+
+```{r}
+#| trusted: true
+data_df <- read_csv("cohort_data.csv", show_col_types = FALSE)
+head(data_df)
+```
+
+## Decoding columns with xvhelper
+
+xvhelper is a little R package that will return the actual values of the returned data.
+
+To use it, you build a `coded_col_df` using `merge_coding_data_dict()` and then translate the categorical columns to values using `decode_categories()`, and then change the column names to R friendly clean ones using `decode_column_names()`.
+
+Note that we need to run `decode_df()` before we run `decode_category()`
+
+```{r}
+#| trusted: true
+#| eval: false
+
+#install via remotes::install_github()
+#install.packages("remotes")
+remotes::install_github("laderast/xvhelper")
+
+library(xvhelper)
+```
+
+```{r}
+#| trusted: true
+coded_col_df <- xvhelper::merge_coding_data_dict(coding_dict = codings_df, data_dict = data_dict_df)
+
+decoded <- data_df %>%
+    xvhelper::decode_single(coded_col_df) |>
+    xvhelper::decode_multi_purrr(coded_col_df) |>
+    xvhelper::decode_column_names(coded_col_df, r_clean_names = FALSE)
+    
+head(decoded)
+```
+
+
+```{r}
+library(ggplot2)
+
+ggplot(decoded) + 
+  aes(x=`Coffee type | Instance 0`) +
+  geom_bar()
+```
+```{r fig.height=10, fig.width=10}
+decoded |>
+  dplyr::select(`Participant ID`, `Diagnoses - main ICD10`) |>
+  tidyr::separate_rows(`Diagnoses - main ICD10`, sep="\\|") |>
+  filter(grepl("Chapter", `Diagnoses - main ICD10`)) |>
+  count(`Diagnoses - main ICD10`) |>
+  arrange(desc(n)) |>
+  gt::gt()
+```
+
+```{r fig.height=10, fig.width=10}
+decoded |>
+  dplyr::select(`Participant ID`, `Diagnoses - main ICD10`) |>
+  tidyr::separate_rows(`Diagnoses - main ICD10`, sep="\\|") |>
+  filter(grepl("Chapter", `Diagnoses - main ICD10`)) |>
+  ggplot() + aes(x=`Diagnoses - main ICD10`) + geom_bar() + 
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r}
+#| trusted: true
+#| eval: false
+write.csv(decoded, file="cohort_decoded.csv")
+```
+
+### Save Output to Project
+
+```{r}
+#| trusted: true
+#| eval: false
+system("dx upload *.csv --destination /users/tladeras/")
+```
+
