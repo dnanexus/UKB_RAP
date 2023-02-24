@@ -1,5 +1,5 @@
 ---
-jupyter: ir
+title: dx extract_dataset for R
 ---
 
 # “dx extract_dataset” in R
@@ -63,11 +63,16 @@ library(xvhelper)
 ```{r}
 #| trusted: true
 # The referenced Dataset is private and provided only to demonstrate an example input. The user will need to supply a permissible and valid record-id
+
 # Assign project-id of dataset
+# In general, you should use the project id of your UKB project
+
 # Assign dataset record-id
-rid <- 'record-G406j8j0x8kzxv3G08k64gVV'
+# record id can be either from a dataset or from a cohort
+projectid <- "project-XXXXXX"
+rid <- "record-G406j8j0x8kzxv3G08k64gVV"
 # Assign joint dataset project-id:record-id
-dataset <- rid
+dataset <- glue::glue("{projectid}:{rid}")
 ```
 
 ### 2. Call “dx extract_dataset” using a supplied dataset
