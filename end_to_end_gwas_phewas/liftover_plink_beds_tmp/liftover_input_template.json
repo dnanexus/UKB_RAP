@@ -1,0 +1,27 @@
+{
+  "stage-common.plink_beds": [
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""}
+  ],
+  "stage-common.plink_bims": [
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""}
+  ],
+  "stage-common.plink_fams": [
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""},
+    {"$dnanexus_link": ""}
+  ],
+  "stage-common.ucsc_chain": {
+    "$dnanexus_link": ""
+  },
+  "stage-common.reference_fastagz": {
+    "$dnanexus_link": ""
+  },
+  "stage-common.split_par_build_code": "hg38"
+}
