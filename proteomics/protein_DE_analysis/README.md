@@ -2,7 +2,7 @@
 
 In general, differential expression (DE) analyses try to identify quantitative changes in expression level between two experimental groups. In this case, we will be performing protein DE analysis, where we will compare the protein expression profiles between groups of samples. The proteins that are found to be differentially expressed between the two groups can reveal biological processes or mechanisms that contribute to the trait that we’re studying.
 
-This folder contains example code for how to run DE analysis on the UKB RAP.  This tutorial is not using UKB proteomics data. Here we are using public proteomics data found in the [Kivisakk et al publication](https://academic.oup.com/braincomms/article/4/4/fcac155/6608340#366642284).
+*NOTE:* This folder contains example code for how to run DE analysis on the UKB RAP.  This tutorial is not using UKB proteomics data. Here we are using public proteomics data found in the [Kivisakk et al publication](https://academic.oup.com/braincomms/article/4/4/fcac155/6608340#366642284).
 
 ## File structure
 | Folder | Description |
@@ -27,4 +27,4 @@ Outputs:
 
 ## Acknowledgements
 We would like to thank the DNAnexus SciProd team for providing the code base for the differential expression analysis, which we extended to allow for proteomics data as input.
-We would also like to thank Ondrej Klempir and Arkarachai Fungtammasan for insightful discussions and code review
+We would also like to thank Ondrej Klempir, Anastazie Sedlakova and Arkarachai Fungtammasan for insightful discussions, testing and code review

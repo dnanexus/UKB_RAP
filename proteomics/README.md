@@ -1,6 +1,6 @@
 # Proteomics analysis examples
 
-This folder contains 2 examples of analyses using the newly available proteomics data.
+This folder contains 2 examples of analyses using public proteomics data for demonstration purposes.
 
 ## File structure
 | Folder | Description |
@@ -15,5 +15,7 @@ The proteomics data on UKB-RAP is available in the Cohort Browser. There are 2 o
 2. Use the Table exporter app on the platform. To use this tool you'll need to specify the following input params:
 
 *Dataset or Cohort or Dashboard*: <file path to the cohort dataset or .dataset file in the root directory>
+
 *File containing Field Names*: If you want to use all proteins then use [field_names.txt](field_names.txt)
-* *Entity*: Options are olink_instance_0, olink_instance_2, olink_instance_3 depending on the samples you want to include
+
+*Entity*: Options are olink_instance_0, olink_instance_2, olink_instance_3 depending on the samples you want to include. See [UKB showcase](https://biobank.ndph.ox.ac.uk/showcase/field.cgi?id=30900) and [UKB-PPP](https://www.biorxiv.org/content/10.1101/2022.06.17.496443v1.full.pdf) preprint for more information on the difference in samples included in the different datasets.
