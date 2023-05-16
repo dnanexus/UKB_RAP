@@ -2,7 +2,7 @@
 
 The goal of a pQTL analysis is to identify genomic variants or SNPs that influence the expression of proteins. Similar to GWAS, which identifies genomic variants associated with some phenotype of interest in the case of pQTLs the phenotype is protein expression. Typically researchers will first identify variants that influence some trait of interest, like a disease, using GWAS. Then by layering on the results of a pQTL analysis, which identifies variants that influence changes in protein expression, researchers can look for co-localization or overlaps between these two sets of variants to identify variants that influence both the trait (disease of interest) and protein expression, which could indicate possible mechanisms of action. Therefore, this pQTL analysis can help to prioritize potential candidate/causal variants.
 
-This folder contains example code for how to run pQTL analysis on the UKB RAP. This tutorial is not using UKB proteomics data. Here we are using simulated data based on [Kivisakk et al publication](https://academic.oup.com/braincomms/article/4/4/fcac155/6608340#366642284).
+*NOTE:* This folder contains example code for how to run pQTL analysis on the UKB RAP. This tutorial is not using UKB proteomics data. Here we are using simulated data based on [Kivisakk et al publication](https://academic.oup.com/braincomms/article/4/4/fcac155/6608340#366642284).
 
 ## Steps
 1. Run [`1_simulate_input_data.ipynb`](1_simulate_input_data.ipynb) to generate simulated proteomic expression data. The output of this notebook is a matrix that is *samples x proteins*. This matrix is passed as the "Phenotypes file" parameter to REGENIE in step 2 below.
@@ -58,4 +58,4 @@ To run REGENIE on 1 chromosome (chromosome 22) using 200 protein traits, this to
 The REGENIE app internally estimates the instance type to use based on the following formula: RAM (Storage in MB) =(#samples*(#vas/block_size)/1048576)* 40 * #traits + 7000. You can use this formula to approximate the cost of running this analysis
 
 ## Acknowledgements
-We would like to thank Ondrej Klempir and Arkarachai Fungtammasan for insightful discussions and code review
+We would like to thank Ondrej Klempir, Anastazie Sedlakova and Arkarachai Fungtammasan for insightful discussions, testing and code review
