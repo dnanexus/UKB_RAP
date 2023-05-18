@@ -14,7 +14,7 @@ In general, differential expression (DE) analyses try to identify quantitative c
 
 ## Steps
 
-1. Run `1_preprocess_explore_data.ipynb` notebook.
+1. Run [`1_preprocess_explore_data.ipynb`](1_preprocess_explore_data.ipynb) notebook.
 
 Input:
 * This notebook started with QC'd proteomic expression data from [Kivisakk et al publication](https://academic.oup.com/braincomms/article/4/4/fcac155/6608340#366642284).
@@ -23,7 +23,7 @@ Outputs:
 * Proteomic expression matrix: 59 sample x 400 protein (`npx.csv`)
 * Phenotype matrix: 59 sample x trait (`pheno.csv`).
 
-2. Run `2_differential_expression_analysis.ipynb` notebook. Using the expression and phenotype output from step 1, this notebooks performs DE analysis comparing patients with mild cognitive impairements (MIC) that are stable vs those that progress to Alzheimer's disease dementia.
+2. Run [`2_differential_expression_analysis.ipynb`](2_differential_expression_analysis.ipynb) notebook. Using the expression and phenotype output from step 1, this notebooks performs DE analysis comparing patients with mild cognitive impairements (MIC) that are stable vs those that progress to Alzheimer's disease dementia.
 
 ## Acknowledgements
 We would like to thank the DNAnexus SciProd team for providing the code base for the differential expression analysis, which we extended to allow for proteomics data as input.
