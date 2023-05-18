@@ -9,7 +9,6 @@ In general, differential expression (DE) analyses try to identify quantitative c
 | --- | --- |
 | [1_preprocess_explore_data.ipynb](1_preprocess_explore_data.ipynb) | Python notebook that pre-processes (normalize and subset expression data) and explore (plot distribution) the data in preparation for DE analysis.|
 | [2_differential_expression_analysis.ipynb](2_differential_expression_analysis.ipynb) | R notebook that performs DE analysis and visualizes the data using a volcano plot. We reused code created by SciProd team to perform [DE for transcriptomic data](https://github.com/dnanexus/OpenBio/blob/master/transcriptomics/tutorial_notebooks/Transcript_Expression_Part-02_Analysis-diff-exp_R.ipynb). |
-| [normalization_experiment.ipynb](normalization_experiment.ipynb) | R notebook that compares the DE proteins found using unnormalized vs normalized data. |
 
 
 ## Steps
